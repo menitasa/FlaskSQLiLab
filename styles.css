@@ -51,6 +51,7 @@ body {
     justify-content: center;
     align-items: center;
     outline: none;
+    transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .button.light-gray {
@@ -69,4 +70,10 @@ body {
 .button.wide {
     grid-column: span 2;
     border-radius: 30px;
+}
+
+/* Clickable effect */
+.button:active {
+    transform: scale(0.95);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 }
