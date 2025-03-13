@@ -1,5 +1,7 @@
 # FlaskSQLiLab
 
+**Built and created by Meni – Cybersecurity Lead | 🛡️ CISO | ☁️ CloudSec | 🌐 NetSec (CCNP) | 🔍 Web Pentester | ✍️ Writer** | [X Profile](https://x.com/MeniTasa)
+
 FlaskSQLiLab is a deliberately vulnerable Flask web application built specifically for educational purposes. It allows security enthusiasts, penetration testers, and students to practice various SQL injection techniques and better understand web security concepts such as session handling and cookie manipulation.
 
 ## ⚠️ Security Disclaimer
@@ -63,11 +65,12 @@ The application contains the following intentionally vulnerable endpoints to pra
 | `/check_user`            | Blind SQL Injection (Boolean & Time-based) | User enumeration                      |
 | `/update_profile`        | Second-order SQL Injection                 | Persistent injection                  |
 | `/session-info`          | Session and Cookie Manipulation            | Inspect and modify sessions/cookies   |
+| `/dashboard`             | Cookie-based SQL Injection                 | Cookie manipulation and injection     |
 
 ## 🎯 Security Challenges
 
 - **Extract Sensitive Data:** Practice injecting malicious payloads to extract usernames and passwords.
-- **Modify Cookies:** Experiment by manually modifying the "remember me" cookie to understand cookie vulnerabilities.
+- **Modify Cookies:** Experiment by manually modifying the "remember me" cookie to understand cookie vulnerabilities and SQL injection via cookies.
 - **Session Handling:** Inspect Flask session data to learn how sessions interact with browser cookies.
 
 ## 🔧 Technologies Used
