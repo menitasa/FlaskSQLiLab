@@ -1,6 +1,6 @@
 # FlaskSQLiLab
 
-**Built and created by Meni – Cybersecurity Lead | 🛡️ CISO | ☁️ CloudSec | 🌐 NetSec (CCNP) | 🔍 Web Pentester | ✍️ Writer** | [X Profile](https://x.com/MeniTasa)
+**Built and created by Meni [X Profile](https://x.com/MeniTasa) – Cybersecurity Lead | 🛡️ CISO | ☁️ CloudSec | 🌐 NetSec (CCNP) | 🔍 Web Pentester | ✍️ Writer** | 
 
 FlaskSQLiLab is a deliberately vulnerable Flask web application built specifically for educational purposes. It allows security enthusiasts, penetration testers, and students to practice various SQL injection techniques and better understand web security concepts such as session handling and cookie manipulation.
 
