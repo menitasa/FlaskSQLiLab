@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Check User - FlaskSQLiLab</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Check User Existence</h2>
+      <form method="POST">
+        <input type="text" name="username" placeholder="Username" required />
+        <button type="submit">Check</button>
+      </form>
+      {% if message %}
+      <p>{{ message }}</p>
+      {% endif %}
+    </div>
+  </body>
+</html>

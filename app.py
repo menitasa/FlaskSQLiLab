@@ -1,5 +1,6 @@
-from flask import Flask, request, redirect, url_for, session, render_template, make_response
+from flask import Flask, request, redirect, url_for, session, render_template, render_template_string, make_response
 import sqlite3, os
+from flask import jsonify
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -54,6 +55,25 @@ def register():
 
     return render_template('register.html')
 
+@app.route('/check_user', methods=['GET', 'POST'])
+def check_user():
+    if request.method == 'POST':
+        username = request.form['username']
+        conn = get_db_connection()
+        query = f"SELECT COUNT(*) FROM users WHERE username='{username}'"
+        print(f"[LOG] Executed Query: {query}")  # Logs injected queries explicitly
+        user_count = conn.execute(query).fetchone()[0]
+
+        if user_count > 0:
+            message = f"User '{username}' exists!"
+        else:
+            message = f"User '{username}' does not exist!"
+
+        print(f"[DEBUG] Query executed: {query}")  # Clearly show injection attempts in console
+        return render_template_string("<p>" + message + "</p><a href='/check_user'>Try again</a>")
+
+    return render_template('check_user.html')
+
 @app.route('/dashboard')
 def dashboard():
     if 'username' in session:
@@ -74,6 +94,8 @@ def dashboard():
             return redirect(url_for('login'))
     else:
         return redirect(url_for('login'))
+    
+
 
     conn = get_db_connection()
     users = conn.execute("SELECT username, password FROM users").fetchall()
@@ -81,6 +103,85 @@ def dashboard():
 
     return render_template('dashboard.html', username=username, users=users)
 
+
+@app.route('/update_profile', methods=['GET', 'POST'])
+def update_profile():
+    if 'username' not in session:
+        return jsonify(error="Unauthorized. Please log in first."), 401
+
+    if request.method == 'POST':
+        new_username = request.form['new_username']
+        conn = get_db_connection()
+
+        # Intentionally vulnerable query (Second-order SQL Injection)
+        query = f"UPDATE users SET username='{new_username}' WHERE username='{session['username']}'"
+        conn.execute(query)
+        conn.commit()
+
+        # Fetch updated user data
+        updated_user = conn.execute(f"SELECT * FROM users WHERE username='{new_username}'").fetchone()
+        conn.close()
+
+        if updated_user:
+            session['username'] = updated_user['username']
+            user_data = {
+                "id": updated_user["id"],
+                "username": updated_user["username"],
+                "password": updated_user["password"],
+                "remember_token": updated_user["remember_token"]
+            }
+            return jsonify(message="Profile updated successfully!", user=user_data)
+
+        return jsonify(error="Failed to update profile."), 400
+
+    return render_template('update_profile.html')
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    results = []
+    if request.method == 'POST':
+        username = request.form['username']
+        conn = get_db_connection()
+        query = f"SELECT id, username, password FROM users WHERE username LIKE '%{username}%'"
+        rows = conn.execute(query).fetchall()
+        conn.close()
+
+        results = [dict(row) for row in rows]
+
+        return jsonify(users=results)
+
+    return render_template('search.html')
+
+
+@app.route('/session-info')
+def session_info():
+    session_data = dict(session)
+    cookie_data = request.cookies.get('remember_me', 'Not set')
+
+    return jsonify({
+        'session_data': session_data,
+        'remember_me_cookie': cookie_data
+    })
+
+
+@app.route('/profile/<username>')
+def profile(username):
+    conn = get_db_connection()
+    query = f"SELECT * FROM users WHERE username = '{username}'"
+    user = conn.execute(query).fetchone()
+    conn.close()
+
+    if user:
+        user_data = {
+            "id": user["id"],
+            "username": user["username"],
+            "password": user["password"],
+            "remember_token": user["remember_token"]
+        }
+        return jsonify(user=user_data)
+    else:
+        return jsonify(error="User not found"), 404
 
 @app.route('/logout')
 def logout():

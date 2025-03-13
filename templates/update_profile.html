@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Update Profile - FlaskSQLiLab</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Update Your Username</h2>
+      <form method="POST">
+        <input
+          type="text"
+          name="new_username"
+          placeholder="New Username"
+          required
+        />
+        <button type="submit">Update Profile</button>
+      </form>
+      <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    </div>
+  </body>
+</html>

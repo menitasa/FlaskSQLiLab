@@ -1,54 +1,164 @@
 # FlaskSQLiLab Architecture and Logic Explanation
 
-**Built and created by Meni – Cybersecurity Lead | 🛡️ CISO | ☁️ CloudSec | 🌐 NetSec (CCNP) | 🔍 Web Pentester | ✍️ Writer** | [X Profile](https://x.com/MeniTasa)
-
-## Overview
-FlaskSQLiLab is a deliberately vulnerable Flask web application designed for security enthusiasts and penetration testers to practice SQL injection techniques and understand web security principles including session management, cookie handling, encryption, and backend operations.
-
-## Application Architecture
-
-### Backend (Flask & Python)
-The backend logic is built using Python with the Flask web framework, serving HTTP requests, managing routes, and handling user interactions. Flask's simplicity allows clear demonstration of vulnerabilities.
-
-### Database (SQLite3)
-SQLite3 is used due to its simplicity and ease of deployment. It stores user credentials, tokens, and other data. The database intentionally lacks input sanitization to illustrate SQL injection vulnerabilities clearly.
-
-### Frontend (HTML & CSS)
-The frontend uses straightforward HTML templates styled with basic CSS to provide an intuitive user interface, closely resembling a real-world web application.
-
-## Logic and Components
-
-### Session Handling
-Sessions are managed through Flask's session mechanism, storing user login states securely on the server-side. However, the application intentionally mismanages sessions to demonstrate vulnerabilities like session hijacking and fixation.
-
-### Cookie Management
-Cookies, particularly the "remember me" cookie, are insecurely handled to explicitly expose cookie-based SQL injection risks. Cookies store plaintext data directly used in database queries, making them susceptible to manipulation.
-
-### Encryption (or Lack Thereof)
-The app intentionally avoids proper encryption and hashing methods, storing passwords and sensitive data in plaintext. This practice clearly illustrates the risks of poor cryptographic practices.
-
-## Vulnerabilities and Their Implementation
-
-| Endpoint                 | Injection Technique                        | Explanation & Usage                   |
-|--------------------------|--------------------------------------------|---------------------------------------|
-| `/` (Login)              | Error-based SQL Injection                   | Authentication bypass                 |
-| `/register`              | Error-based SQL Injection                   | Malicious user creation               |
-| `/search`                | Error-based SQL Injection                   | Data extraction                       |
-| `/profile/<username>`    | UNION-based SQL Injection                   | UNION queries for additional data     |
-| `/check_user`            | Blind SQL Injection (Boolean & Time-based)  | Blind enumeration                     |
-| `/update_profile`        | Second-order SQL Injection                  | Stored injection                      |
-| `/dashboard`             | Cookie-based SQL Injection                  | Cookie manipulation and injection     |
-| `/session-info`          | Session and Cookie Manipulation             | Inspect and modify sessions/cookies   |
-
-## Educational Objectives
-- Understand and exploit SQL injection vulnerabilities.
-- Observe the consequences of insecure session handling and cookie management.
-- Recognize the critical need for encryption and proper database input sanitization.
-
-## Ethical Considerations
-FlaskSQLiLab must only be used within controlled, isolated educational environments. Always adhere to ethical hacking practices and refrain from deploying such vulnerable configurations publicly or in production.
+**Built and created by [Meni](https://x.com/MeniTasa) – Cybersecurity Lead | 🛡️ CISO | ☁️ CloudSec | 🌐 NetSec (CCNP) | 🔍 Web Pentester | ✍️ Writer**
 
 ---
 
-Happy Ethical Hacking!
+## 🔷 Application Overview
 
+**FlaskSQLiLab** is an intentionally vulnerable Flask web application explicitly built to educate users about web security vulnerabilities. It demonstrates various SQL injection methods, cookie manipulation, session handling, and JSON API interactions.
+
+---
+
+## 🛠️ Application Architecture
+
+```plaintext
+FlaskSQLiLab/
+├── app.py                   # Flask backend logic
+├── schema.sql               # Database schema setup
+├── users.db                 # SQLite database
+├── requirements.txt         # Python dependencies
+├── static/
+│   └── style.css            # CSS stylesheets
+├── templates/               # HTML templates
+│   ├── login.html
+│   ├── register.html
+│   ├── dashboard.html
+│   ├── search.html
+│   ├── check_user.html
+│   └── update_profile.html
+└── venv/                    # Python virtual environment
+```
+
+---
+
+## 🔷 Backend Logic & Workflow
+
+### **Main Application (`app.py`)**
+
+- Handles routes, session management, cookies, JSON responses, and database interactions.
+- Vulnerabilities explicitly included for SQL injection practice.
+
+### **Database (SQLite)**
+
+- A single SQLite database (`users.db`) contains the `users` table storing:
+  - Usernames (`username`)
+  - Passwords (`password`) stored explicitly in plaintext
+  - Cookie tokens (`remember_token`) stored unsafely for educational purposes
+
+### **Session and Cookie Management**
+
+- Flask’s session management tracks logged-in users.
+- Cookies (`remember_me`) store usernames directly, enabling explicit cookie-based SQL injection demonstrations.
+
+---
+
+## 📌 Endpoint Logic and Vulnerabilities Explained
+
+### **`/` (Login)**
+
+- Vulnerability: **Error-based SQL Injection**
+- Authentication bypass via unsanitized SQL queries.
+- Sets cookies and sessions explicitly.
+
+### **`/register`**
+
+- Vulnerability: **Error-based SQL Injection**
+- Registers users unsafely via user input directly into database.
+
+### **`/dashboard`**
+
+- Vulnerability: **Cookie-based SQL Injection**
+- Uses cookies explicitly in SQL queries, vulnerable to injection.
+
+### **`/search` (JSON Response)**
+
+- Vulnerability: **Error-based SQL Injection**
+- Returns structured JSON user data vulnerable to injection payloads.
+
+### **`/profile/<username>` (JSON Response)**
+
+- Vulnerability: **UNION-based SQL Injection**
+- Explicitly provides JSON user data extraction via SQL injection.
+
+### **`/check_user` (JSON Response)**
+
+- Vulnerability: **Blind SQL Injection (Boolean and Time-based)**
+- Allows clear user enumeration and data extraction via structured JSON responses.
+
+### **`/update_profile` (JSON Response)**
+
+- Vulnerability: **Second-order SQL Injection**
+- Unsafely updates profile data based on unsanitized input.
+- Clearly returns structured JSON indicating success or error.
+
+### **`/session-info` (JSON Response)**
+
+- Demonstrates session and cookie data explicitly in JSON format.
+- Useful for understanding cookie manipulation and session hijacking.
+
+---
+
+## 🔐 Encryption and Security Practices (Educational Context)
+
+- **Encryption:**  
+  No encryption implemented explicitly to demonstrate vulnerabilities clearly.
+- **Passwords:**  
+  Stored in plaintext explicitly for educational demonstrations.
+
+- **Cookies & Tokens:**  
+  Intentionally insecure (plaintext storage and direct DB usage) to facilitate clear demonstrations of vulnerabilities.
+
+---
+
+## 🎯 Educational Usage & Ethical Guidelines
+
+**FlaskSQLiLab** is explicitly designed for:
+
+- Learning and demonstrating web application vulnerabilities.
+- Practicing SQL injection in a controlled, isolated environment.
+- Demonstrating real-world exploitation clearly and practically.
+
+**Ethical Reminders:**
+
+- **Never deploy publicly.**
+- Use strictly for educational purposes.
+- Follow ethical and legal standards during testing.
+
+---
+
+## 🚩 Practical SQL Injection Examples
+
+- **Authentication bypass (Login):**
+
+```sql
+admin' OR '1'='1' --
+```
+
+- **Data extraction (`/search`):**
+
+```sql
+%' OR '1'='1' --
+```
+
+- **UNION-based data extraction (`/profile/<username>`):**
+
+```
+admin' UNION SELECT id,username,password,remember_token FROM users --
+```
+
+- **Blind SQL Injection (`/check_user`):**
+
+```sql
+admin' AND (SELECT COUNT(*) FROM users WHERE username='admin')>0 --
+```
+
+- **Second-order Injection (`/update_profile`):**
+
+```sql
+attacker', password='hacked' WHERE username='admin' --
+```
+
+---
+
+**Happy Hacking & Learning!**

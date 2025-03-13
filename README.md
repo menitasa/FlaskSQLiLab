@@ -1,12 +1,16 @@
 # FlaskSQLiLab
 
-**Built and created by Meni [X Profile](https://x.com/MeniTasa) – Cybersecurity Lead | 🛡️ CISO | ☁️ CloudSec | 🌐 NetSec (CCNP) | 🔍 Web Pentester | ✍️ Writer** | 
+**Built and created by [Meni](https://x.com/MeniTasa) – Cybersecurity Lead | 🛡️ CISO | ☁️ CloudSec | 🌐 NetSec (CCNP) | 🔍 Web Pentester | ✍️ Writer**
 
-FlaskSQLiLab is a deliberately vulnerable Flask web application built specifically for educational purposes. It allows security enthusiasts, penetration testers, and students to practice various SQL injection techniques and better understand web security concepts such as session handling and cookie manipulation.
+**FlaskSQLiLab** is a deliberately vulnerable Flask web application built specifically for educational purposes. It enables security enthusiasts, penetration testers, and cybersecurity students to practice a variety of SQL injection techniques and understand web security concepts, such as session handling, cookie manipulation, and JSON-based data extraction.
+
+---
 
 ## ⚠️ Security Disclaimer
 
 **Important:** FlaskSQLiLab is intentionally vulnerable and designed solely for educational and learning purposes. **Never expose or deploy it publicly or use it in a production environment.**
+
+---
 
 ## 📂 Project Structure
 
@@ -22,8 +26,13 @@ FlaskSQLiLab/
 └── templates/
     ├── login.html
     ├── register.html
-    └── dashboard.html
+    ├── dashboard.html
+    ├── search.html
+    ├── check_user.html
+    └── update_profile.html
 ```
+
+---
 
 ## 🚀 Getting Started
 
@@ -48,42 +57,90 @@ python app.py
 ```
 
 Access the application at:
+
 ```
 http://localhost:5000
 ```
 
-## 📌 Features & Vulnerabilities
+---
 
-The application contains the following intentionally vulnerable endpoints to practice:
+## 📌 Features, Vulnerabilities & JSON Endpoints
 
-| Endpoint                 | Type of Injection                         | Usage                                 |
-|--------------------------|-------------------------------------------|---------------------------------------|
-| `/` (Login)              | Error-based SQL Injection                  | Authentication bypass                 |
-| `/register`              | Error-based SQL Injection                  | User registration & injection practice|
-| `/search`                | Error-based SQL Injection                  | Data extraction                       |
-| `/profile/<username>`    | UNION-based SQL Injection                  | Data extraction using UNION queries   |
-| `/check_user`            | Blind SQL Injection (Boolean & Time-based) | User enumeration                      |
-| `/update_profile`        | Second-order SQL Injection                 | Persistent injection                  |
-| `/session-info`          | Session and Cookie Manipulation            | Inspect and modify sessions/cookies   |
-| `/dashboard`             | Cookie-based SQL Injection                 | Cookie manipulation and injection     |
+The application contains these intentionally vulnerable endpoints for practice:
 
-## 🎯 Security Challenges
+| Endpoint              | Type of Injection                          | Usage / Response                                  |
+| --------------------- | ------------------------------------------ | ------------------------------------------------- |
+| `/` (Login)           | Error-based SQL Injection                  | Authentication bypass                             |
+| `/register`           | Error-based SQL Injection                  | User registration & injection practice            |
+| `/search`             | Error-based SQL Injection                  | JSON Data extraction (`{"users": [...]}`)         |
+| `/profile/<username>` | UNION-based SQL Injection                  | JSON-based data extraction of user information    |
+| `/check_user`         | Blind SQL Injection (Boolean & Time-based) | User existence check with JSON response           |
+| `/update_profile`     | Second-order SQL Injection                 | Update user profile & JSON response               |
+| `/session-info`       | Session & Cookie Manipulation              | Inspect and modify sessions/cookies (JSON output) |
+| `/dashboard`          | Cookie-based SQL Injection                 | Cookie manipulation and authentication bypass     |
 
-- **Extract Sensitive Data:** Practice injecting malicious payloads to extract usernames and passwords.
-- **Modify Cookies:** Experiment by manually modifying the "remember me" cookie to understand cookie vulnerabilities and SQL injection via cookies.
-- **Session Handling:** Inspect Flask session data to learn how sessions interact with browser cookies.
+---
+
+## 🎯 Enhanced Security Challenges (JSON-based)
+
+- **Extract Sensitive Data:**  
+  Practice injecting malicious payloads (`UNION`, error-based) to extract usernames and passwords in structured JSON format.
+
+- **Cookie Manipulation:**  
+  Modify the "remember me" cookie manually to demonstrate cookie vulnerabilities and SQL injection through cookies.
+
+- **Session Handling:**  
+  Use JSON responses from `/session-info` to clearly visualize session data and understand interactions with browser cookies.
+
+---
 
 ## 🔧 Technologies Used
 
 - Flask (Python)
 - SQLite3
 - HTML & CSS
-
-## 📖 Educational Usage
-
-Use this project exclusively in controlled and isolated environments for security training purposes. Always follow ethical guidelines when practicing penetration testing.
+- JSON responses for structured data exchange
+- Git (version control)
 
 ---
 
-Happy Hacking!
+## 📖 Educational Usage & Ethical Guidelines
 
+Use **FlaskSQLiLab** exclusively in controlled and isolated environments for cybersecurity training purposes. Always follow ethical guidelines and respect legal boundaries when practicing penetration testing.
+
+---
+
+### 📌 Example SQL Injection Payloads (to practice clearly):
+
+- **Login authentication bypass:**
+
+  ```sql
+  admin' OR '1'='1' --
+  ```
+
+- **Extract all users via `/search`:**
+
+  ```sql
+  %' OR '1'='1' --
+  ```
+
+- **UNION-based Injection via `/profile/<username>`:**
+
+  ```
+  admin' UNION SELECT id,username,password,remember_token FROM users --
+  ```
+
+- **Boolean Blind Injection via `/check_user`:**
+
+  ```sql
+  admin' AND (SELECT COUNT(*) FROM users WHERE username='admin')>0 --
+  ```
+
+- **Second-order Injection via `/update_profile`:**
+  ```sql
+  attacker', password='hacked' WHERE username='admin' --
+  ```
+
+---
+
+**Happy Hacking!**
