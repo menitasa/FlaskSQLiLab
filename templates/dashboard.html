@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dashboard - FlaskSQLiLab</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Welcome, {{username}}!</h2>
+      <h3>All Users:</h3>
+      <ul>
+        {% for user in users %}
+        <li>{{ user['username'] }} | {{ user['password'] }}</li>
+        {% endfor %}
+      </ul>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </body>
+</html>
